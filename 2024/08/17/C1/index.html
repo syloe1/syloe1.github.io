@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>C1 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="sudo yum install ansible ansible --version  配置Ansible主机清单和免密登录vi hosts [mysql] host1 host2  [mysql1] host1  [mysql2] host2  将 SSH 公钥复制到目标节点ssh-copy-id host1 ssh-copy-id host2  验证连接：使用 ansible 命令测试所有主机">
+<meta property="og:type" content="article">
+<meta property="og:title" content="C1">
+<meta property="og:url" content="http://example.com/2024/08/17/C1/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="sudo yum install ansible ansible --version  配置Ansible主机清单和免密登录vi hosts [mysql] host1 host2  [mysql1] host1  [mysql2] host2  将 SSH 公钥复制到目标节点ssh-copy-id host1 ssh-copy-id host2  验证连接：使用 ansible 命令测试所有主机">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2024-08-17T07:11:19.000Z">
+<meta property="article:modified_time" content="2024-08-17T07:29:24.700Z">
+<meta property="article:author" content="John Doe">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"><span class="fa fa-bars"></span></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+        
+          <a class="nav-icon" href="/atom.xml" title="RSS Feed"><span class="fa fa-rss"></span></a>
+        
+        <a class="nav-icon nav-search-btn" title="Search"><span class="fa fa-search"></span></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://example.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-C1" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2024/08/17/C1/" class="article-date">
+  <time class="dt-published" datetime="2024-08-17T07:11:19.000Z" itemprop="datePublished">2024-08-17</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      C1
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <pre><code>sudo yum install ansible
+ansible --version
+</code></pre>
+<h3 id="配置Ansible主机清单和免密登录"><a href="#配置Ansible主机清单和免密登录" class="headerlink" title="配置Ansible主机清单和免密登录"></a>配置Ansible主机清单和免密登录</h3><pre><code>vi hosts
+[mysql]
+host1
+host2
+
+[mysql1]
+host1
+
+[mysql2]
+host2
+</code></pre>
+<h3 id="将-SSH-公钥复制到目标节点"><a href="#将-SSH-公钥复制到目标节点" class="headerlink" title="将 SSH 公钥复制到目标节点"></a>将 SSH 公钥复制到目标节点</h3><pre><code>ssh-copy-id host1
+ssh-copy-id host2
+</code></pre>
+<h3 id="验证连接：使用-ansible-命令测试所有主机的连接状态。"><a href="#验证连接：使用-ansible-命令测试所有主机的连接状态。" class="headerlink" title="验证连接：使用 ansible 命令测试所有主机的连接状态。"></a>验证连接：使用 ansible 命令测试所有主机的连接状态。</h3><pre><code>ansible all -m ping
+</code></pre>
+<h3 id="编写-Ansible-Playbook"><a href="#编写-Ansible-Playbook" class="headerlink" title="编写 Ansible Playbook"></a>编写 Ansible Playbook</h3><pre><code>vi Ansible_playbook.yaml
+
+hosts: mysql
+become: true
+tasks:
+    - name: Install MariaDB
+    yum:
+        name: mariadb-server
+        state: present
+
+    - name: Start MariaDB service
+    service:
+        name: mariadb
+        state: started
+        enabled: true
+</code></pre>
+<p>执行文件</p>
+<pre><code>ansible-playbook Ansible_playbook.yaml
+</code></pre>
+<p>验证：</p>
+<pre><code>systemctl status mariadb
+</code></pre>
+<h3 id="编写脚本："><a href="#编写脚本：" class="headerlink" title="编写脚本："></a>编写脚本：</h3><pre><code>mariadb.sh
+#!/bin/bash
+# Wait for MySQL service to start
+sleep 10
+
+# Initialize MariaDB
+mysql -u root -p123456 &lt;&lt;EOF
+CREATE DATABASE IF NOT EXISTS mydatabase;
+GRANT ALL PRIVILEGES ON mydatabase.* TO &#39;root&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;123456&#39;;
+FLUSH PRIVILEGES;
+EOF
+
+echo &quot;MariaDB initialization completed.&quot;
+
+chmod +x mariadb.sh
+</code></pre>
+<p>创建一个 Ansible Playbook 文件，例如 init.yml，用于执行 mariadb.sh 脚本：<br>    #!&#x2F;bin&#x2F;bash</p>
+<pre><code># Wait for MySQL service to start
+sleep 10
+
+# Initialize MariaDB
+mysql -u root -p123456 &lt;&lt;EOF
+CREATE DATABASE IF NOT EXISTS mydatabase;
+GRANT ALL PRIVILEGES ON mydatabase.* TO &#39;root&#39;@&#39;localhost&#39; IDENTIFIED BY &#39;123456&#39;;
+FLUSH PRIVILEGES;
+EOF
+
+echo &quot;MariaDB initialization completed.&quot;
+</code></pre>
+<p>执行 Ansible Playbook：</p>
+<pre><code>ansible-playbook  init.yml
+</code></pre>
+<p>在 node1 节点上执行以下命令，检查 MariaDB 是否正确初始化：</p>
+<pre><code>mysql -u root -p123456
+</code></pre>
+<p>####编辑 Ansible 主机清单文件 hosts，为 host1 和 host2 节点添加变量。</p>
+<pre><code>[mysql]
+host1 id=20
+host2 id=30
+
+[mysql1]
+host1 id=20
+
+[mysql2]
+host2 id=30
+</code></pre>
+<p>验证主机变量：</p>
+<pre><code>cat /etc/ansible/hosts | grep id
+</code></pre>
+<p>创建 my.cnf.j2 模板文件</p>
+<h1 id="Ansible-managed-Do-not-edit-this-file-manually"><a href="#Ansible-managed-Do-not-edit-this-file-manually" class="headerlink" title="Ansible managed: Do not edit this file manually"></a>Ansible managed: Do not edit this file manually</h1><pre><code>[mysqld]
+server-id = &#123;&#123; server_id &#125;&#125;
+log_bin = /var/log/mysql/mysql-bin.log
+binlog_format = mixed
+expire_logs_days = 7
+max_binlog_size = 100M
+innodb_flush_log_at_trx_commit = 1
+sync_binlog = 1
+bind-address = 0.0.0.0
+
+&#123;% if replication_role == 'master' %&#125;
+    # Master specific settings
+    &#123;% elif replication_role == 'slave' %&#125;
+    # Slave specific settings
+    relay_log = /var/lib/mysql/relay-bin
+    relay_log_index = /var/lib/mysql/relay-bin.index
+    log_slave_updates = 1
+    read_only = 1
+    &#123;% endif %&#125;
+</code></pre>
+<h3 id="创建-mariadb-yaml-Ansible-Playbook文件"><a href="#创建-mariadb-yaml-Ansible-Playbook文件" class="headerlink" title="创建 mariadb.yaml Ansible Playbook文件"></a>创建 mariadb.yaml Ansible Playbook文件</h3><pre><code>hosts: host2
+become: true
+vars:
+    server_id: 2  # 替换为host2的服务器ID
+    replication_role: &#39;slave&#39;  # 替换为host2的复制角色
+tasks:
+    - name: Copy my.cnf.j2 template to remote host
+    template:
+        src: my.cnf.j2
+        dest: /etc/mysql/my.cnf
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: Restart MySQL service
+    service:
+        name: mysql
+        state: restarted
+        enabled: true
+        daemon_reload: yes
+
+- hosts: host1
+become: true
+vars:
+    server_id: 1  # 替换为host1的服务器ID
+    replication_role: &#39;master&#39;  # 替换为host1的复制角色
+tasks:
+    - name: Copy my.cnf.j2 template to remote host
+    template:
+        src: my.cnf.j2
+        dest: /etc/mysql/my.cnf
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: Restart MySQL service
+    service:
+        name: mysql
+        state: restarted
+        enabled: true
+        daemon_reload: yes
+</code></pre>
+<h3 id="ansible-playbook-mariadb-yaml"><a href="#ansible-playbook-mariadb-yaml" class="headerlink" title="ansible-playbook mariadb.yaml"></a>ansible-playbook mariadb.yaml</h3><h3 id="mysql-u-root-p-e-“SHOW-SLAVE-STATUS-G-”"><a href="#mysql-u-root-p-e-“SHOW-SLAVE-STATUS-G-”" class="headerlink" title="mysql -u root -p -e “SHOW SLAVE STATUS \G;”"></a>mysql -u root -p -e “SHOW SLAVE STATUS \G;”</h3>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://example.com/2024/08/17/C1/" data-id="clzxtpt64000165fydj3v71w3" data-title="C1" class="article-share-link"><span class="fa fa-share">Share</span></a>
+      
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2024/08/17/C2/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          C2
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2024/08/17/B/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">B</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/08/">August 2024</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2024/08/17/C2/">C2</a>
+          </li>
+        
+          <li>
+            <a href="/2024/08/17/C1/">C1</a>
+          </li>
+        
+          <li>
+            <a href="/2024/08/17/B/">B</a>
+          </li>
+        
+          <li>
+            <a href="/2024/08/17/SET/">SET</a>
+          </li>
+        
+          <li>
+            <a href="/2024/08/17/A/">A</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2024 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.6.4.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
